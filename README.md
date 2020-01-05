@@ -1,6 +1,6 @@
 # Kubernetes CIFS Volume Driver
 
-[![nodesource/node](http://dockeri.co/image/juliohm/kubernetes-cifs-volumedriver-installer)](https://registry.hub.docker.com/u/juliohm/kubernetes-cifs-volumedriver-installer/)
+[![nodesource/node](http://dockeri.co/image/halkeye/kubernetes-cifs-volumedriver-installer)](https://registry.hub.docker.com/u/halkeye/kubernetes-cifs-volumedriver-installer/)
 
 A simple volume driver based on [Kubernetes' Flexvolume](https://github.com/kubernetes/community/blob/master/contributors/devel/flexvolume.md) that allows Kubernetes hosts to mount CIFS volumes (samba shares) into pods and containers.
 
@@ -35,14 +35,14 @@ yum -y install jq cifs-utils
 
 ## Manual Installation
 
-Flexvolumes are very straight forward. The `juliohm~cifs` directory simply needs to be copied into the volume plugin directory of your Kubernetes cluster.
+Flexvolumes are very straight forward. The `halkeye~cifs` directory simply needs to be copied into the volume plugin directory of your Kubernetes cluster.
 
 Below is an example:
 
 ```bash
 ## as root in all kubernetes nodes
-cp -vr juliohm~cifs /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
-chmod +x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/juliohm~cifs/*
+cp -vr halkeye~cifs /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
+chmod +x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/halkeye~cifs/*
 ```
 
 This procedure should be simple enough for testing purposes, so feel free to automate this in any way, shape or form. Once the script is copied and marked as executable, Kubelet should automatically pick it up and it should be working.
@@ -53,7 +53,7 @@ When dealing with a large cluster, manually copying the driver to all hosts beco
 
 As proposed in [Flexvolume's documentation](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/flexvolume-deployment.md#recommended-driver-deployment-method), the recommended driver deployment method is to have a DaemonSet install the driver cluster-wide automatically.
 
-A Docker image [juliohm/kubernetes-cifs-volumedriver-intaller](https://hub.docker.com/r/juliohm/kubernetes-cifs-volumedriver-installer/) is available for this purpose, which can be deployed into a Kubernetes cluster using the `install.yaml` from this repository. The image is built `FROM busybox`, so the it's essentially very small and slightly over 1MB.
+A Docker image [halkeye/kubernetes-cifs-volumedriver-intaller](https://hub.docker.com/r/halkeye/kubernetes-cifs-volumedriver-installer/) is available for this purpose, which can be deployed into a Kubernetes cluster using the `install.yaml` from this repository. The image is built `FROM busybox`, so the it's essentially very small and slightly over 1MB.
 
 Deploying the volume driver should be as easy as:
 
@@ -94,7 +94,7 @@ spec:
   capacity:
     storage: 1Gi
   flexVolume:
-    driver: juliohm/cifs
+    driver: halkeye/cifs
     options:
       opts: sec=ntlm,uid=1000
       server: my-cifs-host
@@ -115,7 +115,7 @@ data:
 kind: Secret
 metadata:
   name: my-secret
-type: juliohm/cifs
+type: halkeye/cifs
 ```
 
 ## Using `securityContext` to inform uid/gid parameters
@@ -176,7 +176,7 @@ If you are using versions older than 0.5, you can still workaround by including 
 ## PV spec
 spec:
   flexVolume:
-    driver: juliohm/cifs
+    driver: halkeye/cifs
     options:
       opts: domain=Foo,uid=33,gid=33
 ```

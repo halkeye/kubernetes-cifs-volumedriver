@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: juliohm-cifs-volumedriver-installer
+  name: halkeye-cifs-volumedriver-installer
 spec:
   selector:
     matchLabels:
-      app: juliohm-cifs-volumedriver-installer
+      app: halkeye-cifs-volumedriver-installer
   template:
     metadata:
-      name: juliohm-cifs-volumedriver-installer
+      name: halkeye-cifs-volumedriver-installer
       labels:
-        app: juliohm-cifs-volumedriver-installer
+        app: halkeye-cifs-volumedriver-installer
     spec:
       containers:
-        - image: juliohm/kubernetes-cifs-volumedriver-installer:0.6
+        - image: halkeye/kubernetes-cifs-volumedriver-installer:0.6
           name: flex-deploy
           securityContext:
             privileged: true

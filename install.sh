@@ -1,9 +1,10 @@
 #!/bin/sh
 
+set -o xtrace
 set -o errexit
 set -o pipefail
 
-VENDOR=juliohm
+VENDOR=halkeye
 DRIVER=cifs
 
 # Assuming the single driver file is located at /$DRIVER inside the DaemonSet image.
@@ -16,18 +17,28 @@ if [ ! -d "/flexmnt/$driver_dir" ]; then
   mkdir "/flexmnt/$driver_dir"
 fi
 
-cp "/$DRIVER" "/flexmnt/$driver_dir/.$DRIVER"
+
+export GOARCH=386
+if [[ `uname -m` == "x86_64" ]]; then
+  export GOARCH="amd64"
+fi
+cp "/$DRIVER-linux-$GOARCH" "/flexmnt/$driver_dir/.$DRIVER"
 mv -f "/flexmnt/$driver_dir/.$DRIVER" "/flexmnt/$driver_dir/$DRIVER"
 
 chmod +x "/flexmnt/$driver_dir/$DRIVER"
 
 echo '
-   _       _ _       _                  __   _  __     
-  (_)_   _| (_) ___ | |__  _ __ ___    / /__(_)/ _|___ 
-  | | | | | | |/ _ \| '_ \| '_ ` _ \  / / __| | |_/ __|
-  | | |_| | | | (_) | | | | | | | | |/ / (__| |  _\__ \
- _/ |\__,_|_|_|\___/|_| |_|_| |_| |_/_/ \___|_|_| |___/
-|__/                                                   
+ /$$                 /$$ /$$                                           /$$        /$$  /$$$$$$
+| $$                | $$| $$                                          /$$/       |__/ /$$__  $$
+| $$$$$$$   /$$$$$$ | $$| $$   /$$  /$$$$$$  /$$   /$$  /$$$$$$      /$$//$$$$$$$ /$$| $$  \__//$$$$$$$
+| $$__  $$ |____  $$| $$| $$  /$$/ /$$__  $$| $$  | $$ /$$__  $$    /$$//$$_____/| $$| $$$$   /$$_____/
+| $$  \ $$  /$$$$$$$| $$| $$$$$$/ | $$$$$$$$| $$  | $$| $$$$$$$$   /$$/| $$      | $$| $$_/  |  $$$$$$
+| $$  | $$ /$$__  $$| $$| $$_  $$ | $$_____/| $$  | $$| $$_____/  /$$/ | $$      | $$| $$     \____  $$
+| $$  | $$|  $$$$$$$| $$| $$ \  $$|  $$$$$$$|  $$$$$$$|  $$$$$$$ /$$/  |  $$$$$$$| $$| $$     /$$$$$$$/
+|__/  |__/ \_______/|__/|__/  \__/ \_______/ \____  $$ \_______/|__/    \_______/|__/|__/    |_______/
+                                             /$$  | $$
+                                            |  $$$$$$/
+                                             \______/
 
 Driver has been installed.
 Make sure /flexmnt from this container mounts to Kubernetes driver directory.
@@ -36,14 +47,6 @@ Make sure /flexmnt from this container mounts to Kubernetes driver directory.
   /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
 
 This path may be different in your system due to kubelet parameter --volume-plugin-dir.
-
-This driver depends on the following packages to be installed on the host:
-
-  ## ubuntu
-  apt-get install -y cifs-utils jq
-
-  ## centos
-  yum install -y cifs-utils jq
 
 This container can now be stopped and removed.
 

@@ -8,7 +8,7 @@ spec:
   capacity:
     storage: 1Gi
   flexVolume:
-    driver: juliohm/cifs
+    driver: halkeye/cifs
     options:
       opts: domain=Foo
       server: fooserver123
