@@ -13,7 +13,7 @@ spec:
         app: halkeye-cifs-volumedriver-installer
     spec:
       containers:
-        - image: halkeye/kubernetes-cifs-volumedriver-installer:0.6
+        - image: halkeye/kubernetes-cifs-volumedriver-installer:0.1
           name: flex-deploy
           securityContext:
             privileged: true
