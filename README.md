@@ -6,48 +6,7 @@ A simple volume driver based on [Kubernetes' Flexvolume](https://github.com/kube
 
 It has been tested under Kubernetes versions:
 
-* 1.8.x
-* 1.9.x
-* 1.10.x
-* 1.11.x
-* 1.12.x
-* 1.13.x
-* 1.14.x
-* 1.15.x
 * 1.16.x
-
-## Pre-requisites
-
-On your Kubernetes nodes, simply install a couple of dependencies:
-
-* `cifs-utils` because the host itself will do the mounting
-* `jq` to parse json coming from the k8s api
-
-```bash
-sudo apt-get install -y jq cifs-utils
-```
-
-For CentOS:
-
-```bash
-yum -y install jq cifs-utils
-```
-
-## Manual Installation
-
-Flexvolumes are very straight forward. The `halkeye~cifs` directory simply needs to be copied into the volume plugin directory of your Kubernetes cluster.
-
-Below is an example:
-
-```bash
-## as root in all kubernetes nodes
-cp -vr halkeye~cifs /usr/libexec/kubernetes/kubelet-plugins/volume/exec/
-chmod +x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/halkeye~cifs/*
-```
-
-This procedure should be simple enough for testing purposes, so feel free to automate this in any way, shape or form. Once the script is copied and marked as executable, Kubelet should automatically pick it up and it should be working.
-
-When dealing with a large cluster, manually copying the driver to all hosts becomes inhuman. For that and most cases in general, the DaemonSet installation should make things easier.
 
 ## DaemonSet Installation
 
@@ -62,8 +21,6 @@ kubectl apply -f install.yaml
 ```
 
 This creates a privileged DaemonSet with pods that mount the host directory `/usr/libexec/kubernetes/kubelet-plugins/volume/exec/` internally as `/flexmnt` for installation. Check the output from the deployed containers to make sure it did not produce any errors. Crashing pods mean something went wrong.
-
-> *NOTE*: This deployment does NOT install host dependencies, which still needs to be done manually on all hosts. See previous chapter *Pre-requisites*.
 
 Once you have verified that installation was completed, the DaemonSet can be safely removed.
 
@@ -184,8 +141,6 @@ spec:
 ## Notes Failures and Known Issues
 
 For most issues reported until now, the root cause was not related to the driver itself. Understanding what's happening at runtime can be challenging.
-
-Remember to install the dependencies: `jq` and `cifs-utils`. These should be installed on every node of the cluster.
 
 Pay attention to the secret's `type` field, which **MUST** match the volume driver name. Otherwise, the secret values will not be passed to the mount script.
 
