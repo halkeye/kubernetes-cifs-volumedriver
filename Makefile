@@ -1,5 +1,5 @@
 TAGNAME = halkeye/kubernetes-cifs-volumedriver-installer
-VERSION = 0.6
+VERSION = 0.1
 
 build: Dockerfile
 	docker build -t $(TAGNAME):$(VERSION) .
